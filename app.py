@@ -7,9 +7,13 @@ from plotly.subplots import make_subplots
 import time
 
 # ================================================================
-#  NO BR NO PARTY SCANNER - COMPLETE & DEBUGGED EDITION
+# 1. CONFIGURAZIONE STREAMLIT (DEVE ESSERE LA PRIMA ISTRUZIONE)
 # ================================================================
+st.set_page_config(page_title="NO BR NO PARTY Scanner", layout="wide")
 
+# ================================================================
+# 2. DATABASE DELLE COIN COMPLETO (444 ASSETS)
+# ================================================================
 BYBIT_444_DATABASE = {
     "Core L1": ["BTCUSDT", "ETHUSDT", "SOLUSDT", "BNBUSDT", "XRPUSDT", "ADAUSDT", "DOTUSDT", "LTCUSDT", "TRXUSDT", "ATOMUSDT", "XLMUSDT", "ETCUSDT", "VETUSDT", "XMRUSDT", "NEOUSDT", "ZECUSDT", "DASHUSDT", "XTZUSDT", "QTUMUSDT", "WAVESUSDT", "ICXUSDT"],
     "AI & DePIN": ["TAOUSDT", "RENDERUSDT", "INJUSDT", "GRASSUSDT", "VIRTUALUSDT", "THETAUSDT", "PYTHUSDT", "AKTUSDT", "AIOZUSDT", "AIXBTUSDT", "ZEREBROUSDT", "0GUSDT", "AGIUSDT", "GLMUSDT", "PHAUSDT", "ARKMUSDT", "UAIUSDT", "COAIUSDT", "GOATUSDT"],
@@ -20,7 +24,7 @@ BYBIT_444_DATABASE = {
     "RWA": ["ONDOUSDT", "XAUTUSDT", "PAXGUSDT", "CFGUSDT", "OMUSDT", "TRIAUSDT", "ACUUSDT", "STOUSDT", "XAUUSDT", "XAGUSDT"],
     "Gaming & Meta": ["IMXUSDT", "GALAUSDT", "SANDUSDT", "MANAUSDT", "AXSUSDT", "YGGUSDT", "PIXELUSDT", "BIGTIMEUSDT", "PORTALUSDT", "BEAMUSDT", "MAGICUSDT", "ENJUSDT", "BLURUSDT", "MAVIAUSDT", "AGLDUSDT", "SUPERUSDT", "RONINUSDT", "MOCAUSDT"],
     "Web3 Infra": ["FILUSDT", "ARUSDT", "STORJUSDT", "GRTUSDT", "LINKUSDT", "TIAUSDT", "CKBUSDT", "ANKRUSDT", "HBARUSDT", "DIAUSDT", "RLCUSDT", "SYSUSDT", "GLMUSDT", "LPTUSDT", "JASMYUSDT", "IOTXUSDT", "QNTUSDT", "WOOUSDT", "MASKUSDT"],
-    "Emerging & New": ["RAVEUSDT", "AKEUSDT", "TNSRUSDT", "SIRENUSDT", "NOMUSDT", "MAGMAUSDT", "NAORISUSDT", "ARCUSDT", "PARTIUSDT", "EVAAUSDT", "SAPIENUSDT", "VVVUSDT", "PTBUSDT", "HUMAUSDT", "MORPHOUSDT", "LABUSDT", "SWARMSUSDT", "SPORTFUNUSDT", "SHELLUSDT", "BOBBOBUSDT", "ZBTUSDT", "AVAAIUSDT", "LIGHTUSDT", "BLESSUSDT", "SAFEUSDT", "IRYSUSDT", "USELESSUSDT", "HFTUSDT", "NOTUSDT", "ENSOUSDT", "REZUSDT", "RSRUSDT", "NIGHTUSDT", "SOSOUSDT", "GPSUSDT", "IPUSDT", "EDUUSDT", "ETHFIUSDT", "COOKIEUSDT", "PENGUUSDT", "ERAUSDT", "ALPINEUSDT", "PROVEUSDT", "WHITEWHALEUSALEUSDT", "TACUSDT", "ZKCUSDT", "1000TAGUSDT", "ENSUSDT", "SOMIUSDT", "TRUSTUSDT", "KAIAUSDT", "LISTAUSDT", "SQDUSDT", "VINEUSDT", "AZTECUSDT", "BSUUSDT", "MYXUSDT", "ZAMAUSDT", "PROMPTUSDT", "EIGENUSDT", "TWTUSDT", "CLUSDT", "BANANAUSDT", "MIRAUSDT", "XCNUSDT", "ASTERUSDT", "ACHUSDT", "AUSDT", "B3USDT", "SNTUSDT", "SAHARAUSDT", "RPLUSDT", "BIOUSDT", "YBUSDT", "SKYUSDT", "ASRUSDT", "LSKUSDT", "NEWTUSDT", "SUNUSDT", "JELLYJELLYUSDT", "MTLUSDT", "1000BTTUSDT", "THEUSDT", "STGUSDT", "OGUSDT", "CTCUSDT", "HEIUSDT", "MAVUSDT", "ROBOUSDT", "DOLOUSDT", "OKBUSDT", "LAUSDT", "PRLUSDT", "KSMUSDT", "PUNDIXUSDT", "COWUSDT", "RVNUSDT", "XAIUSDT", "HPOS10IUSDT", "CVCUSDT", "LPTUSDT", "VANAUSDT", "ZILUSDT", "HIGHUSDT", "SUSDT", "VELVETUSDT", "USD1USDT", "SENTUSDT", "PLUMEUSDT", "IOUSDT", "HOMEUSDT", "USDEUSDT", "GODSUSDT", "TUSDT", "ANKRUSDT", "USDCUSDT", "JCTUSDT", "RLUSDUSDT", "BANKUSDT", "1000XECUSDT", "AERGOUSDT", "WLFIUSDT", "POLYXUSDT", "CROUSDT", "STEEMUSDT", "HANAUSDT", "FLUXUSDT", "STBLUSDT", "WALUSDT", "MUBARAKUSDT", "BTRUSDT", "YZYUSDT", "ANIMEUSDT", "XDCUSDT", "METUSDT", "EDGEUSDT", "FLUIDUSDT", "XPLUSDT", "HAEDALUSDT", "PYRUSDT", "BROCCOLIUSDT", "HMSTRUSDT", "MOCAUSDT", "MAGICUSDT", "ESUSDT", "FFUSDT", "SSVUSDT", "WAXPUSDT", "SOPHUSDT", "FUSDT", "ORBSUSDT", "ORDERUSDT", "NXPCUSDT", "SPKUSDT", "BATUSDT", "ASPUSDT", "GRIFFINUSDT", "GUNUSDT", "FLOCKUSDT", "UMAUSDT", "ACXUSDT", "KATUSDT", "MITOUSDT", "ESPUSDT", "BNTUSDT", "BELUSDT", "MMTUSDT", "APEXUSDT", "USTCUSDT", "HEMIUSDT", "WCTUSDT", "SONICUSDT", "CROSSUSDT", "OLUSDT", "FORMUSDT", "ZORAUSDT", "WETUSDT", "ALLOUSDT"]
+    "Emerging & New": ["RAVEUSDT", "AKEUSDT", "TNSRUSDT", "SIRENUSDT", "NOMUSDT", "MAGMAUSDT", "NAORISUSDT", "ARCUSDT", "PARTIUSDT", "EVAAUSDT", "SAPIENUSDT", "VVVUSDT", "PTBUSDT", "HUMAUSDT", "MORPHOUSDT", "LABUSDT", "SWARMSUSDT", "SPORTFUNUSDT", "SHELLUSDT", "BOBBOBUSDT", "ZBTUSDT", "AVAAIUSDT", "LIGHTUSDT", "BLESSUSDT", "SAFEUSDT", "IRYSUSDT", "USELESSUSDT", "HFTUSDT", "NOTUSDT", "ENSOUSDT", "REZUSDT", "RSRUSDT", "NIGHTUSDT", "SOSOUSDT", "GPSUSDT", "IPUSDT", "EDUUSDT", "ETHFIUSDT", "COOKIEUSDT", "PENGUUSDT", "ERAUSDT", "ALPINEUSDT", "PROVEUSDT", "TACUSDT", "ZKCUSDT", "1000TAGUSDT", "ENSUSDT", "SOMIUSDT", "TRUSTUSDT", "KAIAUSDT", "LISTAUSDT", "SQDUSDT", "VINEUSDT", "AZTECUSDT", "BSUUSDT", "MYXUSDT", "ZAMAUSDT", "PROMPTUSDT", "TWTUSDT", "CLUSDT", "BANANAUSDT", "MIRAUSDT", "XCNUSDT", "ASTERUSDT", "ACHUSDT", "AUSDT", "B3USDT", "SNTUSDT", "SAHARAUSDT", "RPLUSDT", "BIOUSDT", "YBUSDT", "SKYUSDT", "ASRUSDT", "LSKUSDT", "NEWTUSDT", "SUNUSDT", "JELLYJELLYUSDT", "MTLUSDT", "1000BTTUSDT", "THEUSDT", "STGUSDT", "OGUSDT", "CTCUSDT", "HEIUSDT", "MAVUSDT", "ROBOUSDT", "DOLOUSDT", "OKBUSDT", "LAUSDT", "PRLUSDT", "KSMUSDT", "PUNDIXUSDT", "COWUSDT", "RVNUSDT", "XAIUSDT", "HPOS10IUSDT", "CVCUSDT", "VANAUSDT", "ZILUSDT", "HIGHUSDT", "SUSDT", "VELVETUSDT", "USD1USDT", "SENTUSDT", "PLUMEUSDT", "HOMEUSDT", "USDEUSDT", "GODSUSDT", "TUSDT", "USDCUSDT", "JCTUSDT", "RLUSDUSDT", "BANKUSDT", "1000XECUSDT", "AERGOUSDT", "WLFIUSDT", "POLYXUSDT", "CROUSDT", "STEEMUSDT", "HANAUSDT", "FLUXUSDT", "STBLUSDT", "WALUSDT", "MUBARAKUSDT", "BTRUSDT", "YZYUSDT", "ANIMEUSDT", "XDCUSDT", "METUSDT", "EDGEUSDT", "FLUIDUSDT", "XPLUSDT", "HAEDALUSDT", "PYRUSDT", "BROCCOLIUSDT", "HMSTRUSDT", "ESUSDT", "FFUSDT", "SSVUSDT", "WAXPUSDT", "SOPHUSDT", "FUSDT", "ORBSUSDT", "ORDERUSDT", "NXPCUSDT", "SPKUSDT", "BATUSDT", "ASPUSDT", "GRIFFINUSDT", "GUNUSDT", "FLOCKUSDT", "UMAUSDT", "ACXUSDT", "KATUSDT", "MITOUSDT", "ESPUSDT", "BNTUSDT", "BELUSDT", "MMTUSDT", "APEXUSDT", "USTCUSDT", "HEMIUSDT", "WCTUSDT", "SONICUSDT", "CROSSUSDT", "OLUSDT", "FORMUSDT", "ZORAUSDT", "WETUSDT", "ALLOUSDT"]
 }
 
 YOUHODLER_LIST = [
@@ -44,12 +48,7 @@ if "scan_cache" not in st.session_state:
 
 @st.cache_resource
 def get_exchange_client():
-    exchange = ccxt.bybit({'enableRateLimit': True, 'options': {'defaultType': 'swap'}})
-    try:
-        exchange.load_markets()
-    except Exception:
-        pass
-    return exchange
+    return ccxt.bybit({'enableRateLimit': True, 'options': {'defaultType': 'swap'}})
 
 bybit = get_exchange_client()
 
@@ -218,12 +217,17 @@ def analyze_br(df: pd.DataFrame, ticker: str, timeframe: str, volume_hot: float,
     word = "SHORT" if is_short else "LONG"
     break_word = "SUPPORTO ROTTO" if is_short else "BREAK"
 
+    # Flag booleana interna di debug per identificare i setup in attesa pura
+    is_waiting_signal = False
+
     if just_breakout and not volume_warming:
         score, party_meter = min(score, 44), int(round(min(score, 44) / 10))
         situation, tempo = f"😴 {break_word} MA SENZA VOLUME - NO {word}", "💤 Aspetta"
+        is_waiting_signal = True
     elif just_breakout and (not vwap_ok or not ema_fast_ok):
         score, party_meter = min(score, 49), int(round(min(score, 49) / 10))
         situation, tempo = f"⚠️ {break_word} SPORCO - NO {word}", "🕐 Serve conferma"
+        is_waiting_signal = True
     elif just_breakout and volume_ok and vwap_ok and ema_fast_ok and score >= 82:
         situation, tempo = f"🚀 {word} CONFERMATO", "🔥 Adesso"
     elif just_breakout and volume_warming and vwap_ok and ema_fast_ok and score >= 65:
@@ -232,10 +236,16 @@ def analyze_br(df: pd.DataFrame, ticker: str, timeframe: str, volume_hot: float,
         situation, tempo = f"✅ {word} + RETEST", "⏳ Conferma fresca"
     elif just_breakout and score >= 45:
         situation, tempo = f"☕ {word} DEBOLE - NO {word}", "🕐 Serve qualità"
+        is_waiting_signal = True
+    elif distance_pct is not None and distance_pct <= distance_watch:
+        situation, tempo = f"👀 VICINO AL {break_word}", "⏳ In avvicinamento"
+        is_waiting_signal = True
     elif volx < 0.8:
         situation, tempo = f"😴 {word} SENZA SPINTA", "💤 Lenta"
+        is_waiting_signal = True
     else:
         situation, tempo = f"🚽 {word} NON INTERESSANTE", "💤 Ignora"
+        is_waiting_signal = True
 
     entry = price
     if is_short:
@@ -254,7 +264,7 @@ def analyze_br(df: pd.DataFrame, ticker: str, timeframe: str, volume_hot: float,
         "Party Meter": party_meter, "BR Score": score, "Timeframe": timeframe, "Distanza dal PARTY %": round(distance_pct, 3) if distance_pct is not None else np.nan,
         "Volume Booster": round(volx, 2), "Livello BR": br_level, "Tipo Livello": "SERIO" if level_power == "A" else "VELOCE", "Break Obbligatorio": "✅",
         "Entry": entry, "SL": sl, "TP1": tp1, "TP2": tp2, "VWAP OK": "✅" if vwap_ok else "❌", "EMA OK": "✅" if ema_fast_ok else "❌",
-        "Perché": ", ".join(why) if why else "niente di speciale", "Tempo": tempo
+        "Perché": ", ".join(why) if why else "niente di speciale", "Tempo": tempo, "IsWaitingSignal": is_waiting_signal
     }, df, levels
 
 def draw_chart(df: pd.DataFrame, ticker: str, levels, row):
@@ -264,141 +274,100 @@ def draw_chart(df: pd.DataFrame, ticker: str, levels, row):
         if col in df: fig.add_trace(go.Scatter(x=df["Date"], y=df[col], name=name, line=dict(width=1.2)), row=1, col=1)
 
     for lvl in levels:
-        label = f"{'🧱 Res' if lvl['kind'] == 'res' else '🛟 Sup'} {'seria' if lvl['power'] == 'A' else 'veloce'}"
+        label = f"{'🧱 Resistenza' if lvl['kind'] == 'res' else '🛟 Supporto'} {'seria' if lvl['power'] == 'A' else 'veloce'}"
         fig.add_hline(y=lvl["value"], line_width=2 if lvl["power"] == "A" else 1, line_dash="dash", annotation_text=label, row=1, col=1)
 
-    if pd.notna(row.get("Livello BR")): fig.add_hline(y=row["Livello BR"], line_width=3, annotation_text="🎉 PARTY LEVEL", row=1, col=1)
+    if pd.notna(row.get("Livello BR")): fig.add_hline(y=row["Livello BR"], line_width=3, annotation_text="🎉 LIVELLO PARTY / BR-BS", row=1, col=1)
     for y, label in [(row.get("Entry"), "Entry"), (row.get("SL"), "SL"), (row.get("TP1"), "TP1"), (row.get("TP2"), "TP2")]:
         if pd.notna(y): fig.add_hline(y=y, line_dash="dot", annotation_text=label, row=1, col=1)
 
-    fig.add_trace(go.Bar(x=df["Date"], y=df["VolX"], name="Volume Booster", marker_color="orange"), row=2, col=1)
-    fig.add_hline(y=1.8, line_dash="dash", annotation_text="1.8x", row=2, col=1)
+    fig.add_trace(go.Bar(x=df["Date"], y=df["VolX"], name="Volume Booster x media 20", marker_color="orange"), row=2, col=1)
+    fig.add_hline(y=1.8, line_dash="dash", annotation_text="Volume caldo 1.8x", row=2, col=1)
     fig.update_xaxes(rangeslider_visible=False)
-    
-    fig.update_layout(
-        height=520, 
-        template="plotly_dark", 
-        margin=dict(l=10, r=10, t=25, b=10), 
-        title=f"{ticker} - NO BR NO PARTY",
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1, font=dict(size=10))
-    )
+    fig.update_layout(height=650, template="plotly_dark", margin=dict(l=10, r=10, t=25, b=10), title=f"{ticker} - NO BR NO PARTY")
     return fig
 
-# ========================= UI STREAMLIT ===========================
-st.set_page_config(page_title="NO BR NO PARTY Scanner", layout="wide")
-
-st.markdown("""
-    <style>
-    .block-container {
-        padding-top: 1.5rem !important;
-        padding-bottom: 1.5rem !important;
-        padding-left: 1rem !important;
-        padding-right: 1rem !important;
-    }
-    
-    @media (max-width: 768px) {
-        h1 {
-            font-size: 1.6rem !important;
-        }
-        h3 {
-            font-size: 1.2rem !important;
-        }
-        h4 {
-            font-size: 1.05rem !important;
-        }
-        
-        [data-testid="stMetricTitle"] {
-            font-size: 0.75rem !important;
-        }
-        [data-testid="stMetricValue"] {
-            font-size: 1.1rem !important;
-        }
-        [data-testid="stMetricContainer"] {
-            padding: 5px 10px !important;
-        }
-        
-        .stButton button {
-            width: 100% !important;
-            height: 3.2rem !important;
-            font-size: 1rem !important;
-        }
-        
-        .stAlert {
-            padding: 8px !important;
-            font-size: 0.85rem !important;
-        }
-    }
-    </style>
-    """, unsafe_allow_html=True)
-
+# ========================= UI STREAMLIT CORRETTA ===========================
 st.title("🚀 NO BR NO PARTY Scanner - LONG & SHORT")
 
 with st.sidebar:
     st.header("🎛️ Comandi Radar")
     chosen_timeframe = st.selectbox("Timeframe Radar", TIMEFRAMES, index=TIMEFRAMES.index("15m"))
-    trade_direction = st.selectbox("Direzione Radar", ["LONG", "SHORT"], index=0)
+    
+    st.markdown("**Filtri Operatività / Caselle Stati:**")
+    show_long = st.checkbox("🟢 Includi LONG", value=True)
+    show_short = st.checkbox("🔴 Includi SHORT", value=True)
+    show_wait = st.checkbox("⏳ Includi WAIT (Attesa/Senza Vol/Break Sporchi)", value=True)
+    
     category_options = ["YouHodler List", "Tutti i 444 Asset"] + [k for k in BYBIT_444_DATABASE.keys() if k != "YouHodler List"]
     category_selector = st.selectbox("Categoria Database", category_options, index=0)
-    max_assets = st.slider("Numero massimo coin da scansionare", 10, 444, 80, step=10)
+    max_assets = st.slider("Numero massimo coin da scansionare", 10, 444, 60, step=10)
     volume_hot = st.slider("Volume minimo per PARTY", 1.1, 5.0, 1.8, step=0.1)
     distance_watch = st.slider("Distanza max dal BR (%)", 0.1, 5.0, 1.0, step=0.1)
     retest_tol = st.slider("Tolleranza retest (%)", 0.05, 1.5, 0.35, step=0.05)
     min_score = st.slider("BR Score minimo in tabella", 0, 100, 25, step=5)
-    require_breakout = st.toggle("Mostra solo trade con rottura già fatta", value=True)
 
+# ==================== RICERCA RAPIDA RAPIDA ON-DEMAND DIRETTA ====================
 st.markdown("### 🔍 RICERCA ISTANTANEA DIRETTA (Single Ticker On-Demand)")
-st.caption("Usa questo box per analizzare al volo una coin specifica a tua scelta, senza toccare lo scanner generale.")
 
 c_box1, c_box2, c_box3 = st.columns([2, 1, 1])
 with c_box1:
-    search_input = st.text_input("Inserisci Ticker Singolo (es. SOL, RENDER, BTC, DOGE):", value="").upper().strip()
+    search_input = st.text_input("Inserisci Ticker Singolo (es. SOL, RENDER, BTC):", value="").upper().strip()
 with c_box2:
     search_tf = st.selectbox("Timeframe Ricerca Diretta", TIMEFRAMES, index=TIMEFRAMES.index("15m"), key="s_tf")
 with c_box3:
-    search_dir = st.selectbox("Direzione Ricerca Diretta", ["LONG", "SHORT"], index=0, key="s_dir")
+    st.markdown("**Caselle Filtro Asset Singolo:**")
+    s_show_long = st.checkbox("LONG ", value=True, key="s_l")
+    s_show_short = st.checkbox("SHORT ", value=True, key="s_s")
+    s_show_wait = st.checkbox("WAIT ", value=True, key="s_w")
 
 if search_input:
     fmt_input = search_input if search_input.endswith("USDT") else f"{search_input}USDT"
     with st.spinner(f"Analisi flash in corso per {fmt_input}..."):
         s_df, s_sym = fetch_ohlcv_safe(fmt_input, search_tf, limit=250)
         if s_df is not None:
-            s_row, s_analyzed_df, s_levels = analyze_br(s_df, fmt_input, search_tf, volume_hot, distance_watch, retest_tol, require_breakout=False, direction=search_dir)
+            res_long, _, _ = analyze_br(s_df, fmt_input, search_tf, volume_hot, distance_watch, retest_tol, require_breakout=False, direction="LONG")
+            res_short, _, _ = analyze_br(s_df, fmt_input, search_tf, volume_hot, distance_watch, retest_tol, require_breakout=False, direction="SHORT")
+            
+            s_row, s_analyzed_df, s_levels = None, None, None
+            if res_long and (res_long["BR Score"] >= (res_short["BR Score"] if res_short else 0)):
+                s_row, s_analyzed_df, s_levels = res_long, add_indicators(s_df), pine_style_levels(add_indicators(s_df))
+            elif res_short:
+                s_row, s_analyzed_df, s_levels = res_short, add_indicators(s_df), pine_style_levels(add_indicators(s_df))
+
             if s_row:
-                st.markdown(f"#### 📊 Scheda Rapida: {fmt_input} ({search_tf})")
+                is_wait_state = s_row.get("IsWaitingSignal", False)
+                allow_display = False
                 
-                sm1, sm2, sm3, sm4, sm5 = st.columns(5)
-                sm1.metric("Situazione", s_row["Situazione"])
-                sm2.metric("BR Score", f"{s_row['BR Score']}/100")
-                sm3.metric("Volume Attuale", f"{s_row['Volume Booster']}x")
-                sm4.metric("Direzione", s_row["Direzione"])
-                sm5.metric("Operatività", s_row["Tempo"])
+                # Regola corretta di inclusione per Caselle Spuntate
+                if s_row["Direzione"] == "LONG" and s_show_long and not is_wait_state: allow_display = True
+                elif s_row["Direzione"] == "SHORT" and s_show_short and not is_wait_state: allow_display = True
+                elif is_wait_state and s_show_wait: allow_display = True
                 
-                st.info(f"💡 **Motivazione Confluenze:** {s_row['Perché']}")
-                
-                st_c1, st_c2, st_c3, st_c4 = st.columns(4)
-                st_c1.info(f"📊 **Entry Consigliata:** {s_row['Entry']:.6f}")
-                st_c2.warning(f"🎯 **Livello Chiave BR:** {s_row['Livello BR']:.6f}" if pd.notna(s_row['Livello BR']) else "🎯 **Livello:** N/A")
-                st_c3.error(f"🛑 **Stop Loss (SL):** {s_row['SL']:.6f}" if pd.notna(s_row['SL']) else "🛑 **SL:** N/A")
-                st_c4.success(f"💰 **Take Profit 1 (TP1):** {s_row['TP1']:.6f}" if pd.notna(s_row['TP1']) else "💰 **TP1:** N/A")
-                
-                st.plotly_chart(draw_chart(s_analyzed_df, fmt_input, s_levels, s_row), use_container_width=True, key="search_chart")
+                if allow_display:
+                    st.markdown(f"#### 📊 Scheda Rapida On-Demand: {fmt_input} ({search_tf})")
+                    sm1, sm2, sm3, sm4, sm5 = st.columns(5)
+                    sm1.metric("Situazione", s_row["Situazione"])
+                    sm2.metric("BR Score", f"{s_row['BR Score']}/100")
+                    sm3.metric("Volume Attuale", f"{s_row['Volume Booster']}x")
+                    sm4.metric("Direzione", s_row["Direzione"])
+                    sm5.metric("Operatività", s_row["Tempo"])
+                    st.info(f"💡 **Motivazione Confluenze:** {s_row['Perché']}")
+                    st.plotly_chart(draw_chart(s_analyzed_df, fmt_input, s_levels, s_row), use_container_width=True, key="search_chart")
+                else:
+                    st.warning("⚠️ L'asset non corrisponde alle caselle (LONG / SHORT / WAIT) spuntate.")
         else:
-            st.error(f"❌ Impossibile caricare i dati per '{search_input}'. Verifica che sia scambiato USDT su Bybit.")
+            st.error(f"❌ Errore caricamento '{search_input}'.")
 
 st.markdown("---")
 
+# ==================== STRUTTURA RADAR MULTI-ASSET GENERALE ====================
 st.markdown("### 📡 RADAR MULTI-ASSET GENERALE")
 
 current_tickers = list(ALL_TICKERS) if category_selector == "Tutti i 444 Asset" else BYBIT_444_DATABASE[category_selector]
 current_tickers = current_tickers[:max_assets]
 
-col_a, col_b, col_c = st.columns([1,1,2])
-with col_a:
-    run_scan = st.button("🔄 AVVIA SCANSIONE RADAR DI MASSA", type="primary", use_container_width=True)
-with col_b:
-    st.metric("TF attivo Radar", chosen_timeframe)
-with col_c:
-    st.info(f"Filtri Radar -> Direzione: {trade_direction} | Categoria: {category_selector}")
+run_scan = st.button("🔄 AVVIA SCANSIONE RADAR DI MASSA", type="primary", use_container_width=True)
 
 if run_scan:
     rows = []
@@ -406,15 +375,33 @@ if run_scan:
     progress = st.progress(0)
     status = st.empty()
     total = len(current_tickers)
+    
     for i, ticker in enumerate(current_tickers, start=1):
         status.write(f"Scansiono {ticker}... {i}/{total}")
         df, used_symbol = fetch_ohlcv_safe(ticker, chosen_timeframe, limit=280)
         if df is not None:
             try:
-                row, analyzed_df, levels = analyze_br(df, ticker, chosen_timeframe, volume_hot, distance_watch, retest_tol, require_breakout=require_breakout, direction=trade_direction)
-                if row:
-                    rows.append(row)
-                    cache[ticker] = {"df": analyzed_df, "levels": levels, "row": row, "symbol": used_symbol}
+                row_l, df_l, l_lvls = analyze_br(df, ticker, chosen_timeframe, volume_hot, distance_watch, retest_tol, require_breakout=False, direction="LONG")
+                row_s, df_s, s_lvls = analyze_br(df, ticker, chosen_timeframe, volume_hot, distance_watch, retest_tol, require_breakout=False, direction="SHORT")
+                
+                chosen_row, chosen_df, chosen_levels = None, None, None
+                if row_l and (row_l["BR Score"] >= (row_s["BR Score"] if row_s else 0)):
+                    chosen_row, chosen_df, chosen_levels = row_l, df_l, l_lvls
+                elif row_s:
+                    chosen_row, chosen_df, chosen_levels = row_s, df_s, s_lvls
+                
+                if chosen_row:
+                    is_wait = chosen_row.get("IsWaitingSignal", False)
+                    keep_asset = False
+                    
+                    # Logica inclusiva perfetta basata sulle tre caselle indipendenti
+                    if chosen_row["Direzione"] == "LONG" and show_long and not is_wait: keep_asset = True
+                    elif chosen_row["Direzione"] == "SHORT" and show_short and not is_wait: keep_asset = True
+                    elif is_wait and show_wait: keep_asset = True
+                    
+                    if keep_asset:
+                        rows.append(chosen_row)
+                        cache[ticker] = {"df": chosen_df, "levels": chosen_levels, "row": chosen_row, "symbol": used_symbol}
             except Exception:
                 pass
         progress.progress(i / total)
@@ -433,7 +420,7 @@ if run_scan:
 df_display = st.session_state.scan_rows
 
 if df_display.empty:
-    st.info("💡 Nessun dato caricato nel Radar. Premi il pulsante sopra 'AVVIA SCANSIONE RADAR DI MASSA' per popolare la tabella dei 444 asset.")
+    st.info("💡 Nessun dato caricato nel Radar o nessun asset corrisponde alle caselle (LONG/SHORT/WAIT) attive.")
 else:
     top = df_display.head(5)[["Ticker", "Direzione", "Situazione", "Party Meter", "BR Score", "Volume Booster"]]
     st.subheader("🔥 Top 5 Active Crypto")
@@ -460,20 +447,17 @@ else:
     )
 
     st.markdown("#### 📈 Seleziona l'Asset Scansionato per visualizzare il Grafico Plotly")
-    lista_coin_disponibili = df_display["Ticker"].tolist()
-    ticker_scelto = st.selectbox("Scegli quale coin analizzare sotto:", lista_coin_disponibili, index=0)
+    ticker_scelto = st.selectbox("Scegli quale coin analizzare sotto:", df_display["Ticker"].tolist(), index=0)
 
     pack = st.session_state.scan_cache.get(ticker_scelto)
     if pack:
         row = pack["row"]
         st.subheader(f"📊 Scheda Tecnica Dummies Radar: {ticker_scelto}")
-        
         c1, c2, c3, c4, c5 = st.columns(5)
         c1.metric("Situazione", row["Situazione"])
         c2.metric("Party Meter", f"{row['Party Meter']}/10")
         c3.metric("Volume Attuale", f"{row['Volume Booster']}x")
-        c4.metric("Distanza Livello", f"{row['Distanza dal PARTY %']}%")
+        c4.metric("Distanza Livello", f"{row['Distanza dal PARTY %']}%" if pd.notna(row['Distanza dal PARTY %']) else "0.0%")
         c5.metric("Tempo / Timing", row["Tempo"])
-        
         st.write(f"**Perché:** {row['Perché']}")
         st.plotly_chart(draw_chart(pack["df"], ticker_scelto, pack["levels"], row), use_container_width=True, key="radar_chart")
