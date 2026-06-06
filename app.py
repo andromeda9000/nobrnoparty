@@ -46,9 +46,34 @@ if "scan_rows" not in st.session_state:
 if "scan_cache" not in st.session_state:
     st.session_state.scan_cache = {}
 
+# ================================================================
+# 3. CLIENT REFRESH / ANTI-BLOCCO DEPLOY CLOUD COIN CLIENT
+# ================================================================
 @st.cache_resource
 def get_exchange_client():
-    return ccxt.bybit({'enableRateLimit': True, 'options': {'defaultType': 'swap'}})
+    exchange = ccxt.bybit({
+        'enableRateLimit': True,
+        'timeout': 30000,
+        'options': {
+            'defaultType': 'swap',
+            'adjustForTimeDifference': True,
+        },
+        'headers': {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+        }
+    })
+    
+    # Tentativo di bypass degli IP Cloud bloccati tramite switch su api.bytick.com
+    try:
+        exchange.load_markets()
+    except Exception:
+        exchange.urls['api'] = 'https://api.bytick.com'
+        try:
+            exchange.load_markets()
+        except Exception:
+            pass
+            
+    return exchange
 
 bybit = get_exchange_client()
 
@@ -217,7 +242,6 @@ def analyze_br(df: pd.DataFrame, ticker: str, timeframe: str, volume_hot: float,
     word = "SHORT" if is_short else "LONG"
     break_word = "SUPPORTO ROTTO" if is_short else "BREAK"
 
-    # Flag booleana interna di debug per identificare i setup in attesa pura
     is_waiting_signal = False
 
     if just_breakout and not volume_warming:
@@ -287,7 +311,7 @@ def draw_chart(df: pd.DataFrame, ticker: str, levels, row):
     fig.update_layout(height=650, template="plotly_dark", margin=dict(l=10, r=10, t=25, b=10), title=f"{ticker} - NO BR NO PARTY")
     return fig
 
-# ========================= UI STREAMLIT CORRETTA ===========================
+# ========================= UI STREAMLIT ===========================
 st.title("🚀 NO BR NO PARTY Scanner - LONG & SHORT")
 
 with st.sidebar:
@@ -307,7 +331,7 @@ with st.sidebar:
     retest_tol = st.slider("Tolleranza retest (%)", 0.05, 1.5, 0.35, step=0.05)
     min_score = st.slider("BR Score minimo in tabella", 0, 100, 25, step=5)
 
-# ==================== RICERCA RAPIDA RAPIDA ON-DEMAND DIRETTA ====================
+# ==================== RICERCA RAPIDA ON-DEMAND DIRETTA ====================
 st.markdown("### 🔍 RICERCA ISTANTANEA DIRETTA (Single Ticker On-Demand)")
 
 c_box1, c_box2, c_box3 = st.columns([2, 1, 1])
@@ -339,7 +363,6 @@ if search_input:
                 is_wait_state = s_row.get("IsWaitingSignal", False)
                 allow_display = False
                 
-                # Regola corretta di inclusione per Caselle Spuntate
                 if s_row["Direzione"] == "LONG" and s_show_long and not is_wait_state: allow_display = True
                 elif s_row["Direzione"] == "SHORT" and s_show_short and not is_wait_state: allow_display = True
                 elif is_wait_state and s_show_wait: allow_display = True
@@ -394,7 +417,6 @@ if run_scan:
                     is_wait = chosen_row.get("IsWaitingSignal", False)
                     keep_asset = False
                     
-                    # Logica inclusiva perfetta basata sulle tre caselle indipendenti
                     if chosen_row["Direzione"] == "LONG" and show_long and not is_wait: keep_asset = True
                     elif chosen_row["Direzione"] == "SHORT" and show_short and not is_wait: keep_asset = True
                     elif is_wait and show_wait: keep_asset = True
