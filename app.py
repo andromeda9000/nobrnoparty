@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
-import time
+import yfinance as yf
 
 # ================================================================
 # 1. CONFIGURAZIONE STREAMLIT (DEVE ESSERE LA PRIMA ISTRUZIONE)
@@ -46,59 +46,45 @@ if "scan_rows" not in st.session_state:
 if "scan_cache" not in st.session_state:
     st.session_state.scan_cache = {}
 
-# ================================================================
-# 3. CLIENT REFRESH / ANTI-BLOCCO DEPLOY CLOUD COIN CLIENT
-# ================================================================
-@st.cache_resource
-def get_exchange_client():
-    exchange = ccxt.bybit({
-        'enableRateLimit': True,
-        'timeout': 30000,
-        'options': {
-            'defaultType': 'swap',
-            'adjustForTimeDifference': True,
-        },
-        'headers': {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
-        }
-    })
-    
-    # Tentativo di bypass degli IP Cloud bloccati tramite switch su api.bytick.com
-    try:
-        exchange.load_markets()
-    except Exception:
-        exchange.urls['api'] = 'https://api.bytick.com'
-        try:
-            exchange.load_markets()
-        except Exception:
-            pass
-            
-    return exchange
-
-bybit = get_exchange_client()
-
-def clean_ticker_for_api(t: str):
-    base_name = t.upper().replace("USDT", "").strip()
-    no_prefix = base_name
-    for prefix in ["1000000", "100000", "10000", "1000"]:
-        if no_prefix.startswith(prefix):
-            no_prefix = no_prefix.replace(prefix, "", 1)
-            break
-    return [
-        f"{base_name}USDT", f"{base_name}/USDT", f"{base_name}/USDT:USDT", f"{t}:USDT",
-        f"{no_prefix}/USDT", f"{no_prefix}/USDT:USDT", f"1000{no_prefix}/USDT:USDT"
-    ]
+# Mappatura dei timeframe da Bybit a Yahoo Finance
+YF_INTERVALS = {
+    "1m": "1m", "3m": "2m", "5m": "5m", "15m": "15m", "30m": "30m",
+    "1h": "60m", "2h": "60m", "4h": "730m", "1d": "1d"
+}
 
 def fetch_ohlcv_safe(display_ticker: str, timeframe: str, limit: int = 260):
-    for symbol in clean_ticker_for_api(display_ticker):
-        try:
-            candles = bybit.fetch_ohlcv(symbol, timeframe=timeframe, limit=limit)
-            if candles and len(candles) > 80:
-                df = pd.DataFrame(candles, columns=["Timestamp", "Open", "High", "Low", "Close", "Volume"])
-                df["Date"] = pd.to_datetime(df["Timestamp"], unit="ms")
-                return df, symbol
-        except Exception:
-            continue
+    """Recupera i dati tramite Yahoo Finance per bypassare i blocchi IP del Cloud"""
+    base_name = display_ticker.upper().replace("USDT", "").strip()
+    if base_name.startswith("1000000"): base_name = base_name.replace("1000000", "")
+    elif base_name.startswith("100000"): base_name = base_name.replace("100000", "")
+    elif base_name.startswith("10000"): base_name = base_name.replace("10000", "")
+    elif base_name.startswith("1000"): base_name = base_name.replace("1000", "")
+    
+    # Formato Yahoo Finance per le crypto (es. BTC-USD)
+    yf_ticker = f"{base_name}-USD"
+    interval = YF_INTERVALS.get(timeframe, "15m")
+    
+    # Determina il periodo corretto in base all'intervallo richiesto
+    if interval in ["1m", "2m", "5m"]: period = "max" if interval=="5m" else "7d"
+    elif interval in ["15m", "30m", "60m"]: period = "max" if interval=="60m" else "30d"
+    else: period = "1y"
+
+    try:
+        ticker_obj = yf.Ticker(yf_ticker)
+        df_yf = ticker_obj.history(period=period, interval=interval)
+        if df_yf.empty:
+            # Fallback se non trova la coppia con -USD
+            df_yf = yf.Ticker(f"{base_name}USDT=X").history(period="1mo", interval=interval)
+            
+        if not df_yf.empty and len(df_yf) > 40:
+            df = df_yf.reset_index()
+            # Rinomina le colonne nel formato standard dello scanner
+            rename_dict = {"Datetime": "Date", "Date": "Date", "Open": "Open", "High": "High", "Low": "Low", "Close": "Close", "Volume": "Volume"}
+            df = df.rename(columns=rename_dict)
+            df = df[["Date", "Open", "High", "Low", "Close", "Volume"]].tail(limit)
+            return df, display_ticker
+    except Exception:
+        pass
     return None, None
 
 def add_indicators(df: pd.DataFrame) -> pd.DataFrame:
